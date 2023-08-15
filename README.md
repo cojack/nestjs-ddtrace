@@ -3,12 +3,12 @@
 ## Install
 
 ```sh
-npm i nestjs-ddtrace --save
+npm i nestjs-dd-trace --save
 ```
 
 ## Setup
 
-1. Create tracing file (tracting.ts):
+1. Create tracing file (tracing.ts):
 
     ```ts
     import tracer from 'dd-trace';
@@ -52,11 +52,17 @@ npm i nestjs-ddtrace --save
     import { DatadogTraceModule } from 'nestjs-ddtrace';
 
     @Module({
-      imports: [LoggerModule.forRoot({
-        pinoHttp: {
-          level: process.env.ENV !== 'prod' ? 'trace' : 'info'
-        }
-      }), DatadogTraceModule.forRoot()],
+      imports: [
+        LoggerModule.forRoot({
+          pinoHttp: {
+            level: process.env.ENV !== 'prod' ? 'trace' : 'info'
+          }
+        }), 
+        DatadogTraceModule.forRoot({
+          controllers: true,
+          provides: true
+        })
+      ],
     })
     export class AppModule {}
     ```
@@ -116,18 +122,18 @@ import { Span } from 'nestjs-ddtrace';
 @Injectable()
 @Span()
 export class BookService {
-  async getBooks() { ... }
-  async deleteBook(id: string) { ... }
+  async getBooks() { /* ... */ }
+  async deleteBook(id: string) { /* ... */ }
 }
 
 @Controller()
 @Span()
 export class HelloController {
   @Get('/books')
-  getBooks() { ... }
+  getBooks() { /* ... */ }
 
   @Delete('/books/:id')
-  deleteBooks() { ... }
+  deleteBooks() { /* ... */ }
 }
 ```
 
