@@ -1,5 +1,5 @@
 {
-  "name": "nestjs-dd-trace",
+  "name": "@nestpro/dd-trace",
   "version": "10.0.1",
   "description": "NestJS Datadog Trace Library",
   "repository": {
