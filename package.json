@@ -4,7 +4,7 @@
   "description": "NestJS Datadog Trace Library",
   "repository": {
     "type": "git",
-    "url": "https://github.com/codebrick-corp/nestjs-ddtrace"
+    "url": "https://github.com/cojack/nestjs-ddtrace"
   },
   "keywords": [
     "nestjs",
