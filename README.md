@@ -3,7 +3,7 @@
 ## Install
 
 ```sh
-npm i nestjs-dd-trace --save
+npm i @nestpro/dd-trace
 ```
 
 ## Setup
