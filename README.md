@@ -10,17 +10,18 @@ npm i @nestpro/dd-trace
 
 1. Create tracing file (tracing.ts):
 
-    ```ts
-    import tracer from 'dd-trace';
+   ```ts
+   import DataDogTrace from 'dd-trace';
+   
+   const tracer = DataDogTrace.init({
+     logInjection: true,
+   });
+   
+   export { tracer };
+   ```
+   
+   Use already initialized DataDog tracer instance
 
-    // initialized in a different file to avoid hoisting.
-    tracer.init({
-      // https://docs.datadoghq.com/tracing/connect_logs_and_traces/nodejs/
-      logInjection: true
-    });
-    export default tracer;
-
-    ```
 
 2. Import the tracing file:
 
@@ -44,6 +45,9 @@ npm i @nestpro/dd-trace
     bootstrap();
     ```
 
+   Use `APP_` prefix for your application configuration environment variables.
+
+
 3. Add *LoggerModule* and *DatadogModule* to *AppModule*:
 
     ```ts
@@ -55,8 +59,9 @@ npm i @nestpro/dd-trace
       imports: [
         LoggerModule.forRoot({
           pinoHttp: {
-            level: process.env.ENV !== 'prod' ? 'trace' : 'info'
-          }
+            level: process.env.APP_ENV !== 'prod' ? 'trace' : 'info'
+          },
+          exclude: [{ method: RequestMethod.ALL, path: 'health' }], // if you have /health path, exclude it from logs
         }), 
         DatadogTraceModule.forRoot({
           controllers: true,
