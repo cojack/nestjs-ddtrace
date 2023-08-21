@@ -2,7 +2,10 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
 import { Constants } from './constants';
 import { MetadataScanner, ModulesContainer } from '@nestjs/core';
-import { Controller, Injectable as InjectableInterface } from '@nestjs/common/interfaces';
+import {
+  Controller,
+  Injectable as InjectableInterface,
+} from '@nestjs/common/interfaces';
 import tracer, { Span } from 'dd-trace';
 import { Injector } from './injector.interface';
 
@@ -11,9 +14,9 @@ export class DecoratorInjector implements Injector {
   private readonly metadataScanner: MetadataScanner = new MetadataScanner();
   private readonly logger = new Logger();
 
-  constructor(private readonly modulesContainer: ModulesContainer) { }
+  constructor(private readonly modulesContainer: ModulesContainer) {}
 
-  public inject(options: { controllers?: boolean, providers?: boolean }) {
+  public inject(options: { controllers?: boolean; providers?: boolean }) {
     this.injectProviders(options.providers);
     this.injectControllers(options.controllers);
   }
@@ -66,17 +69,26 @@ export class DecoratorInjector implements Injector {
         Reflect.defineMetadata(Constants.SPAN_METADATA, 1, provider.metatype);
       }
       const isProviderDecorated = this.isDecorated(provider.metatype);
-      const methodNames = this.metadataScanner.getAllFilteredMethodNames(provider.metatype.prototype);
+      const methodNames = this.metadataScanner.getAllMethodNames(
+        provider.metatype.prototype,
+      );
 
       for (const methodName of methodNames) {
         const method = provider.metatype.prototype[methodName];
 
         // If span annotation is attached to class, @Span is applied to all methods.
-        if ((isProviderDecorated && !this.isAffected(method)) || (this.isDecorated(method) && !this.isAffected(method))) {
-          const spanName = this.getSpanName(method) || `${provider.name}.${methodName}`;
+        if (
+          (isProviderDecorated && !this.isAffected(method)) ||
+          (this.isDecorated(method) && !this.isAffected(method))
+        ) {
+          const spanName =
+            this.getSpanName(method) || `${provider.name}.${methodName}`;
           provider.metatype.prototype[methodName] = this.wrap(method, spanName);
 
-          this.logger.log(`Mapped ${provider.name}.${methodName}`, this.constructor.name);
+          this.logger.log(
+            `Mapped ${provider.name}.${methodName}`,
+            this.constructor.name,
+          );
         }
       }
     }
@@ -93,20 +105,31 @@ export class DecoratorInjector implements Injector {
         Reflect.defineMetadata(Constants.SPAN_METADATA, 1, controller.metatype);
       }
       const isControllerDecorated = this.isDecorated(controller.metatype);
-      const methodNames = this.metadataScanner.getAllFilteredMethodNames(controller.metatype.prototype);
+      const methodNames = this.metadataScanner.getAllMethodNames(
+        controller.metatype.prototype,
+      );
 
       for (const methodName of methodNames) {
         const method = controller.metatype.prototype[methodName];
 
         // If span annotation is attached to class, @Span is applied to all methods.
-        if ((isControllerDecorated && !this.isAffected(method)) || (this.isDecorated(method) && !this.isAffected(method))) {
-          const spanName = this.getSpanName(method) || `${controller.name}.${methodName}`;
-          controller.metatype.prototype[methodName] = this.wrap(method, spanName);
+        if (
+          (isControllerDecorated && !this.isAffected(method)) ||
+          (this.isDecorated(method) && !this.isAffected(method))
+        ) {
+          const spanName =
+            this.getSpanName(method) || `${controller.name}.${methodName}`;
+          controller.metatype.prototype[methodName] = this.wrap(
+            method,
+            spanName,
+          );
 
-          this.logger.log(`Mapped ${controller.name}.${methodName}`, this.constructor.name);
+          this.logger.log(
+            `Mapped ${controller.name}.${methodName}`,
+            this.constructor.name,
+          );
         }
       }
-
     }
   }
 
@@ -127,14 +150,13 @@ export class DecoratorInjector implements Injector {
           if (prototype.constructor.name === 'AsyncFunction') {
             return prototype
               .apply(this, args)
-              .catch(error => {
+              .catch((error) => {
                 DecoratorInjector.recordException(error, span);
               })
               .finally(() => span.finish());
           } else {
             try {
-              const result = prototype.apply(this, args);
-              return result;
+              return prototype.apply(this, args);
             } catch (error) {
               DecoratorInjector.recordException(error, span);
             } finally {
@@ -142,7 +164,7 @@ export class DecoratorInjector implements Injector {
             }
           }
         });
-      }
+      },
     }[prototype.name];
 
     // Reflect.defineMetadata(Constants.SPAN_METADATA, spanName, method);
