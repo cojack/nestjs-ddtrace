@@ -60,7 +60,7 @@ npm i @nestpro/dd-trace
         }), 
         DatadogTraceModule.forRoot({
           controllers: true,
-          provides: true
+          providers: true
         })
       ],
     })
