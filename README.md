@@ -1,5 +1,8 @@
 # NestJS Datadog Trace
 
+dd-trace 5.x
+nest 10.3
+
 ## Install
 
 ```sh
