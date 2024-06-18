@@ -3,7 +3,7 @@ import { Controller, Get, Injectable, UsePipes } from '@nestjs/common';
 import { EventPattern, Transport } from '@nestjs/microservices';
 import { DatadogTraceModule } from './datadog-trace.module';
 import { Span } from './span.decorator';
-import { Constants } from './constants';
+import { SPAN_METADATA, SPAN_METADATA_ACTIVE } from './trace.tokens';
 import { tracer, Span as TraceSpan, Scope } from 'dd-trace';
 import * as request from 'supertest';
 import { PATH_METADATA, PIPES_METADATA } from '@nestjs/common/constants';
@@ -51,11 +51,11 @@ describe('DecoratorInjector', () => {
     // then
     expect(result).toBe(0);
     expect(
-      Reflect.getMetadata(Constants.SPAN_METADATA, HelloService.prototype.hi),
+      Reflect.getMetadata(SPAN_METADATA, HelloService.prototype.hi),
     ).toBe('hello');
     expect(
       Reflect.getMetadata(
-        Constants.SPAN_METADATA_ACTIVE,
+        SPAN_METADATA_ACTIVE,
         HelloService.prototype.hi,
       ),
     ).toBe(1);
@@ -106,11 +106,11 @@ describe('DecoratorInjector', () => {
     // then
     expect(result).toBe(0);
     expect(
-      Reflect.getMetadata(Constants.SPAN_METADATA, HelloService.prototype.hi),
+      Reflect.getMetadata(SPAN_METADATA, HelloService.prototype.hi),
     ).toBe('hello');
     expect(
       Reflect.getMetadata(
-        Constants.SPAN_METADATA_ACTIVE,
+        SPAN_METADATA_ACTIVE,
         HelloService.prototype.hi,
       ),
     ).toBe(1);
@@ -163,11 +163,11 @@ describe('DecoratorInjector', () => {
 
     // then
     expect(
-      Reflect.getMetadata(Constants.SPAN_METADATA, HelloService.prototype.hi),
+      Reflect.getMetadata(SPAN_METADATA, HelloService.prototype.hi),
     ).toBe('hello');
     expect(
       Reflect.getMetadata(
-        Constants.SPAN_METADATA_ACTIVE,
+        SPAN_METADATA_ACTIVE,
         HelloService.prototype.hi,
       ),
     ).toBe(1);
@@ -221,11 +221,11 @@ describe('DecoratorInjector', () => {
 
     // then
     expect(
-      Reflect.getMetadata(Constants.SPAN_METADATA, HelloService.prototype.hi),
+      Reflect.getMetadata(SPAN_METADATA, HelloService.prototype.hi),
     ).toBe('hello');
     expect(
       Reflect.getMetadata(
-        Constants.SPAN_METADATA_ACTIVE,
+        SPAN_METADATA_ACTIVE,
         HelloService.prototype.hi,
       ),
     ).toBe(1);
@@ -281,13 +281,13 @@ describe('DecoratorInjector', () => {
     expect(result2).toBe(1);
     expect(
       Reflect.getMetadata(
-        Constants.SPAN_METADATA_ACTIVE,
+        SPAN_METADATA_ACTIVE,
         HelloService.prototype.hi,
       ),
     ).toBe(1);
     expect(
       Reflect.getMetadata(
-        Constants.SPAN_METADATA_ACTIVE,
+        SPAN_METADATA_ACTIVE,
         HelloService.prototype.hello,
       ),
     ).toBe(1);
@@ -348,13 +348,13 @@ describe('DecoratorInjector', () => {
     // then
     expect(
       Reflect.getMetadata(
-        Constants.SPAN_METADATA_ACTIVE,
+        SPAN_METADATA_ACTIVE,
         HelloController.prototype.hi,
       ),
     ).toBe(1);
     expect(
       Reflect.getMetadata(
-        Constants.SPAN_METADATA_ACTIVE,
+        SPAN_METADATA_ACTIVE,
         HelloController.prototype.hello,
       ),
     ).toBe(1);
@@ -406,7 +406,7 @@ describe('DecoratorInjector', () => {
     // then
     expect(
       Reflect.getMetadata(
-        Constants.SPAN_METADATA_ACTIVE,
+        SPAN_METADATA_ACTIVE,
         HelloController.prototype.hi,
       ),
     ).toBe(1);
@@ -428,7 +428,7 @@ describe('DecoratorInjector', () => {
 
     expect(
       Reflect.getMetadata(
-        Constants.SPAN_METADATA_ACTIVE,
+        SPAN_METADATA_ACTIVE,
         HelloController.prototype.hello,
       ),
     ).toBe(1);
@@ -500,19 +500,19 @@ describe('DecoratorInjector', () => {
     // then
     expect(
       Reflect.getMetadata(
-        Constants.SPAN_METADATA_ACTIVE,
+        SPAN_METADATA_ACTIVE,
         HelloController.prototype.hi,
       ),
     ).toBe(1);
     expect(
       Reflect.getMetadata(
-        Constants.SPAN_METADATA_ACTIVE,
+        SPAN_METADATA_ACTIVE,
         HelloController.prototype.hello,
       ),
     ).toBe(1);
     expect(
       Reflect.getMetadata(
-        Constants.SPAN_METADATA_ACTIVE,
+        SPAN_METADATA_ACTIVE,
         WorldController.prototype.bar,
       ),
     ).toBe(1);
@@ -594,19 +594,19 @@ describe('DecoratorInjector', () => {
     expect(result3).toBe(2);
     expect(
       Reflect.getMetadata(
-        Constants.SPAN_METADATA_ACTIVE,
+        SPAN_METADATA_ACTIVE,
         HelloService.prototype.hi,
       ),
     ).toBe(1);
     expect(
       Reflect.getMetadata(
-        Constants.SPAN_METADATA_ACTIVE,
+        SPAN_METADATA_ACTIVE,
         HelloService.prototype.hello,
       ),
     ).toBe(1);
     expect(
       Reflect.getMetadata(
-        Constants.SPAN_METADATA_ACTIVE,
+        SPAN_METADATA_ACTIVE,
         WorldService.prototype.foo,
       ),
     ).toBe(1);

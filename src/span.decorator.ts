@@ -1,5 +1,4 @@
 import { SetMetadata } from '@nestjs/common';
-import { Constants } from './constants';
+import { SPAN_METADATA } from './trace.tokens';
 
-export const Span = (name?: string) =>
-  SetMetadata(Constants.SPAN_METADATA, name);
+export const Span = (name?: string) => SetMetadata(SPAN_METADATA, name);

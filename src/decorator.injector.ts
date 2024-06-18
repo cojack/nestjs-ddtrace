@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
-import { Constants } from './constants';
+import { SPAN_METADATA, SPAN_METADATA_ACTIVE } from './trace.tokens';
 import { MetadataScanner, ModulesContainer } from '@nestjs/core';
 import {
   Controller,
@@ -27,7 +27,7 @@ export class DecoratorInjector implements Injector {
    * @returns
    */
   private isDecorated(prototype): boolean {
-    return Reflect.hasMetadata(Constants.SPAN_METADATA, prototype);
+    return Reflect.hasMetadata(SPAN_METADATA, prototype);
   }
 
   /**
@@ -36,7 +36,7 @@ export class DecoratorInjector implements Injector {
    * @returns
    */
   private isAffected(prototype): boolean {
-    return Reflect.hasMetadata(Constants.SPAN_METADATA_ACTIVE, prototype);
+    return Reflect.hasMetadata(SPAN_METADATA_ACTIVE, prototype);
   }
 
   /**
@@ -45,7 +45,7 @@ export class DecoratorInjector implements Injector {
    * @returns
    */
   private getSpanName(prototype): string {
-    return Reflect.getMetadata(Constants.SPAN_METADATA, prototype);
+    return Reflect.getMetadata(SPAN_METADATA, prototype);
   }
 
   /**
@@ -66,7 +66,7 @@ export class DecoratorInjector implements Injector {
 
     for (const provider of providers) {
       if (injectAll) {
-        Reflect.defineMetadata(Constants.SPAN_METADATA, 1, provider.metatype);
+        Reflect.defineMetadata(SPAN_METADATA, 1, provider.metatype);
       }
       const isProviderDecorated = this.isDecorated(provider.metatype);
       const methodNames = this.metadataScanner.getAllMethodNames(
@@ -102,7 +102,7 @@ export class DecoratorInjector implements Injector {
 
     for (const controller of controllers) {
       if (injectAll) {
-        Reflect.defineMetadata(Constants.SPAN_METADATA, 1, controller.metatype);
+        Reflect.defineMetadata(SPAN_METADATA, 1, controller.metatype);
       }
       const isControllerDecorated = this.isDecorated(controller.metatype);
       const methodNames = this.metadataScanner.getAllMethodNames(
@@ -170,7 +170,7 @@ export class DecoratorInjector implements Injector {
     // Reflect.defineMetadata(Constants.SPAN_METADATA, spanName, method);
 
     // Flag that wrapping is done
-    Reflect.defineMetadata(Constants.SPAN_METADATA_ACTIVE, 1, prototype);
+    Reflect.defineMetadata(SPAN_METADATA_ACTIVE, 1, prototype);
 
     // Copy existing metadata
     const source = prototype;

@@ -3,7 +3,7 @@ import { FactoryProvider } from '@nestjs/common/interfaces/modules/provider.inte
 import { TraceService } from './trace.service';
 import { DecoratorInjector } from './decorator.injector';
 import { Injector } from 'src/injector.interface';
-import { Constants } from './constants';
+import { TRACE_INJECTORS } from './trace.tokens';
 
 @Module({})
 export class DatadogTraceModule {
@@ -36,7 +36,7 @@ export class DatadogTraceModule {
     providers?: boolean;
   }): FactoryProvider {
     return {
-      provide: Constants.TRACE_INJECTORS,
+      provide: TRACE_INJECTORS,
       useFactory: async (...injectors: Injector[]) => {
         for await (const injector of injectors) {
           if (injector.inject) await injector.inject(options);
