@@ -1,6 +1,6 @@
 {
   "name": "@nestpro/dd-trace",
-  "version": "10.0.4",
+  "version": "10.3.0",
   "description": "NestJS Datadog Trace Library",
   "repository": {
     "type": "git",
